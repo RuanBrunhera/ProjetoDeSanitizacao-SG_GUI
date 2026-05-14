@@ -54,8 +54,8 @@ export const consultarDeletados = async () => {
     return await projetoModel.consultarDeletados();
 };
 
-export const consultarFiltroAvacado = async (filtro = []) => {
-    return await projetoModel.consultarFiltroAvacado(filtro);
+export const consultarFiltroAvancado = async (filtro = []) => {
+    return await projetoModel.consultarFiltroAvancado(filtro);
 };
 
 

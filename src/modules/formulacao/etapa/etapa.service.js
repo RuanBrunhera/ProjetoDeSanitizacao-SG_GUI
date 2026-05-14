@@ -1,3 +1,4 @@
+import { AppError } from '../../../core/utils/AppError.js';
 import * as EtapaModel from './etapa.model.js';
 
 export const cadastrar = async (etapa={}) => {
@@ -6,6 +7,18 @@ export const cadastrar = async (etapa={}) => {
 
 export const alterar = async (etapa={}) => {
     return await EtapaModel.alterar(etapa);
+};
+
+export const alterarOrdem = async (ordemEtapa = {}) => {
+    const { etapas } = ordemEtapa;
+    if (!etapas || !Array.isArray(etapas) || etapas.length === 0) {
+        throw new AppError({
+            message: 'Lista de etapas inválidas',
+            reason: 'O campo etapas deve ser um array com ao menos um item contendo id e ordem',
+            code: 400
+        });
+    }   
+    return await EtapaModel.alterarOrdem(etapas);
 };
 
 export const consultar = async (filtro = '') => {

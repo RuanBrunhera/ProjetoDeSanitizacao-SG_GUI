@@ -213,7 +213,7 @@ const filtroAvancado = (projetos=[], filtroConsulta)=>{
     // return filtrar(dados_essenciais, filtroConsulta);
 }
 
-export const consultarFiltroAvacado = async (filtro = []) => {
+export const consultarFiltroAvancado = async (filtro = []) => {
     try {
         let filtroConsulta = {
             materia_prima:[], 

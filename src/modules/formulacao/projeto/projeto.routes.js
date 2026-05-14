@@ -17,17 +17,6 @@ export default [
     ehPublica: false
   },
   {
-    codigo: 'projeto:consultarPorId',
-    metodo: 'GET',
-    modulo: 'formulacao',
-		rota: 'projeto/:id',
-    middlewares: [autenticar, autorizar],
-    functionExec: projeto.consultarPorId,
-    recurso: 'Projetos',
-    descricao: 'Consultar um projeto pelo seu ID',
-    ehPublica: false
-  },
-  {
     codigo: 'projeto:consultarPorCodigo',
     metodo: 'GET',
     modulo: 'formulacao',
@@ -124,6 +113,17 @@ export default [
     functionExec: projeto.deletar,
     recurso: 'Projetos',
     descricao: 'Deletar projeto',
+    ehPublica: false
+  },
+  {
+    codigo: 'projeto:consultarPorId',
+    metodo: 'GET',
+    modulo: 'formulacao',
+    rota: 'projeto/:id',
+    middlewares: [autenticar, autorizar],
+    functionExec: projeto.consultarPorId,
+    recurso: 'Projetos',
+    descricao: 'Consultar um projeto pelo seu ID',
     ehPublica: false
   }
 ];

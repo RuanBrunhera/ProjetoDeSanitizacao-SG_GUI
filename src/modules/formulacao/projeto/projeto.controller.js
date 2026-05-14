@@ -25,7 +25,7 @@ export const consultar = asyncHandler(async (req, res, next) => {
         }
     }
     else{
-        data = await projetoService.consultarFiltroAvacado(filtro_avancado);
+        data = await projetoService.consultarFiltroAvancado(filtro_avancado);
     }
     return responses.success(res, { data });
 });

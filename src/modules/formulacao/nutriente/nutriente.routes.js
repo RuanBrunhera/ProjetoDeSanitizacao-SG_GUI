@@ -44,7 +44,7 @@ export default [
 		modulo: 'formulacao',
 		rota: 'nutriente',
 		middlewares: [autenticar, autorizar, validate(createNutrienteSchema)],
-		functionExec: nutriente.cadastrada,
+		functionExec: nutriente.cadastrar,
 		recurso: 'Nutrientes',
 		descricao: 'Cadastrar nutriente',
 		ehPublica: false

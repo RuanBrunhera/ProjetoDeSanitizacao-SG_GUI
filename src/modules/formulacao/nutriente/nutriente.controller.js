@@ -2,7 +2,7 @@ import * as nutrienteService from './nutriente.service.js';
 import * as responses from '../../../core/utils/responses.js';
 import { asyncHandler } from '../../../core/utils/asyncHandler.js';
 
-export const cadastrada = asyncHandler(async (req, res, next) => {
+export const cadastrar = asyncHandler(async (req, res, next) => {
     const nutriente = req.body; 
     const novoNutriente = await nutrienteService.cadastrar(nutriente);
     return responses.created(res, { data: novoNutriente });

@@ -43,12 +43,13 @@ export function buscarSessao( id, usuario, token) {
 function limparSessoes() {
   const agora = Date.now();
   const umaHora = 60 * 60 * 1000; // 1 hora em ms
+  const antes = sessoes.length;
 
   sessoes = sessoes.filter(session => (agora - session.criadoEm) < umaHora);
 
-  console.log(`[CLEANUP] Sessões ativas: ${sessoes.length}`);
+  console.log(`[CLEANUP] Sessões removidas: ${antes - sessoes.length} | Sessões ativas: ${sessoes.length}`);
 }
 
-// Configura execução automática a cada 1h
-setInterval(limparSessoes, 60 * 60 * 1000); // 1h
+// Configura execução automática a cada 5minutos
+setInterval(limparSessoes, 5 * 60 * 1000); // 5 minutos em ms
 
