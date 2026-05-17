@@ -24,7 +24,6 @@ export const listar = async () => {
     return perfis;
 };
 
-
 export const listarPorId = async (perfilId) => {
     const perfilIdNumber = Number(perfilId);
     if (!perfilIdNumber) {
@@ -66,8 +65,8 @@ export const listarPorNome = async (perfilNome) => {
 
 export const alterar = async (perfilId, dados = { nome:'', descricao:''}) => {
     const perfilIdNumber = Number(perfilId);
-    const nome = dados.nome.trim() ?? undefined;
-    const descricao = dados.descricao.trim() ?? undefined; 
+    const nome = dados.nome?.trim() ?? undefined;
+    const descricao = dados.descricao?.trim() ?? undefined;
 
     if (!perfilIdNumber) {
         throw new AppError({

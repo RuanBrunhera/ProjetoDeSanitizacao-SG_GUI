@@ -4,10 +4,10 @@ import { asyncHandler } from '../../../core/utils/asyncHandler.js';
 
 export const obterInfoSistema = asyncHandler(async (req, res, next) => {
     const rootDomain = req.protocol + '://' + req.get('host');
-    const data ={
-        status_server: '(DEV - v2) ok - API SGQUI v2.5',
-        dominio_raiz : rootDomain,
-        atualização: '01/05/2026',
+    const data = {
+        status_server: `${process.env.NODE_ENV || 'development'} - API SGQUI v2.5`,
+        dominio_raiz:   rootDomain,
+        atualização:    '01/05/2026',
         endpoints_disponiveis: `${rootDomain}/rbac/endpoints`,
         
     };

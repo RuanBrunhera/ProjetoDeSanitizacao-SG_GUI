@@ -1,15 +1,8 @@
-import express from 'express';
-
 import app from './src/app.js';
 
-const server = express();
+const PORT = process.env.PORT || 3031;
 
-server.use(app);
-
-const PORT = 3031; 
-app.listen(PORT,()=>{
-    console.log(
-        `API: Rodando - PORT: ${PORT}`,
-        `Link de acesso local: http://localhost:${PORT}/`
-    );
+app.listen(PORT, () => {
+    console.log(`API: Rodando - PORT: ${PORT}`);
+    console.log(`Link de acesso local: http://localhost:${PORT}/`);
 });

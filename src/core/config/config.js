@@ -12,12 +12,12 @@ const developmentConfig = {
 };
 
 const productionConfig = {
-    host: process.env.DB_HOST,
-    port: parseInt(process.env.DB_PORT, 10),
-    name: process.env.BD_NAME,
-    dialect: process.env.BD_DIALECT,
-    user: process.env.BD_USER,
-    password: process.env.BD_PASS
+    host:       process.env.DB_HOST,
+    port:       parseInt(process.env.DB_PORT, 10),
+    name:       process.env.DB_NAME,
+    dialect:    process.env.DB_DIALECT,
+    user:       process.env.DB_USER,
+    password:   process.env.DB_PASS
 };
 
 export const db = process.env.NODE_ENV === 'production' ? productionConfig : developmentConfig;

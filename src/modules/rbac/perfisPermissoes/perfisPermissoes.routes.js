@@ -1,41 +1,37 @@
-import * as perfisPermissoesController from './perfisPermissoes.controller.js';
-import { validate } from '../../../core/middlewares/validate.js';
-import { createPerfisPermissoesSchema } from './perfisPermissoes.schema.js';
-import autenticar from '../../../core/middlewares/autenticacao.js';
-import autorizar from '../../../core/middlewares/autorizar.js';
+import * as elemento from './elemento.controller.js';
 
 export default [
 	{
-		codigo: 'perfis_permissoes:vincular',
-		metodo: 'POST',
-		modulo: 'rbac',
-		rota: 'perfil_permissoes',
-		middlewares: [autenticar, autorizar, validate(createPerfisPermissoesSchema)],
-		functionExec: perfisPermissoesController.vincular,
-		recurso: 'Perfis-Permissões',
-		descricao: 'Atribuir permissões aos perfis',
-		ehPublica: false
+		codigo:'elemento:consultar',
+		metodo: 'GET',
+		modulo: 'formulacao',
+		rota: 'elemento',
+		middlewares: [],
+		functionExec: elemento.consultar,
+		recurso: 'Elementos',
+		descricao: 'Exibir dados dos elementos cadastrados',
+		ehPublica: true
 	},
 	{
-		codigo: 'perfis_permissoes:listarVinculos',
+		codigo:'elemento:consultarPorId',
 		metodo: 'GET',
-		modulo: 'rbac',
-		rota: 'perfil_permissoes/:perfilId/',
-		middlewares: [autenticar, autorizar],
-		functionExec: perfisPermissoesController.listarVinculos,
-		recurso: 'Perfis-Permissões',
-		descricao: 'Listar permissões concedidas aos perfis',
-		ehPublica: false
+		modulo: 'formulacao',
+		rota: 'elemento/:id',
+		middlewares: [],
+		functionExec: elemento.consultarPorId,
+		recurso: 'Elementos',
+		descricao: 'Exibir dados dos elementos pelo ID',
+		ehPublica: true
 	},
 	{
-		codigo: 'perfis_permissoes:permissoesPerfilAcessos',
+		codigo:'elemento:consultarPorSimbolo',
 		metodo: 'GET',
-		modulo: 'rbac',
-		rota: 'perfil_permissoes/acessos/:perfilId',
-		middlewares: [autenticar],
-		functionExec: perfisPermissoesController.permissoesPerfilAcessos,
-		recurso: 'Perfis-Permissões',
-		descricao: 'Controla os acessos do perfil com base nas permissões concedidas a ele',
+		modulo: 'formulacao',
+		rota: 'elemento/simbolo/:simbolo',
+		middlewares: [],
+		functionExec: elemento.consultarPorSimbolo,
+		recurso: 'Elementos',
+		descricao: 'Exibir dados dos elementos pelo símbolo',
 		ehPublica: true
 	}
 ];

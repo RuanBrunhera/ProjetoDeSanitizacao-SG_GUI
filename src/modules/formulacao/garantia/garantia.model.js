@@ -72,7 +72,6 @@ export const cadastrar = async (garantia={}) => {
         return await consultarPorId(lastId);
     } 
     catch (error) {
-        
         if (error.code === 'ER_DUP_ENTRY') {
             throw new AppError({
                 message: 'Registro duplicado',
@@ -80,7 +79,6 @@ export const cadastrar = async (garantia={}) => {
                 code: 409
             });
         }
-
         throw new AppError({
             message: 'Erro ao cadastrar garantia',
             reason: `Falha na execução do INSERT na tabela 'garantia'; verifique se o nutriente e a matéria-prima informados existem e se os dados são válidos. Detalhe: ${error.message}`,
@@ -91,7 +89,6 @@ export const cadastrar = async (garantia={}) => {
 
 export const alterar = async (garantia={}) => {
     try {
-
         const keys = Object.keys(garantia);
         const values = Object.values(garantia);
         const setClause = keys.map(k=> `${k} = ?`).join(', ');
@@ -146,14 +143,14 @@ export const consultarPorId = async (id) => {
 
 export const consultarPorMP = async (mp_id) => {
     try {
-        const cmdSql = 'SELECT * FROM garantia WHERE mp_id = ?;';
+        const cmdSql = 'SELECT * FROM garantia WHERE mp = ?;';
         const [dados] = await pool.execute(cmdSql, [mp_id]);
         return dados;
     } 
     catch (error) {
         throw new AppError({
             message: 'Erro ao consultar garantia por matéria-prima',
-            reason: `Falha na execução do SELECT na tabela 'garantia' filtrando pelo ID da matéria-prima (consulta MP); verifique se a matéria-prima informada existe. Detalhe: ${error.message}`,
+            reason: `Falha na execução do SELECT na tabela 'garantia' filtrando pelo ID da matéria-prima; verifique se a matéria-prima informada existe. Detalhe: ${error.message}`,
             code: 500
         });
     }

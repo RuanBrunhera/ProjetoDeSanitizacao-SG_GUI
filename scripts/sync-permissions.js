@@ -1,7 +1,6 @@
 import pool from "../src/core/database/data.js";
 import allRoutesMaps from "../src/routes/allRoutes.maps.js";
 
-
 const permissions = [...allRoutesMaps];
 
 async function syncPermissions() {
@@ -10,25 +9,19 @@ async function syncPermissions() {
     try {
 
         // Verificar se já existem permissões na tabela
-        const [rows] = await cx.execute('SELECT COUNT(*) AS count FROM permissoes;');
-        const count = rows[0].count;
+        const [countRows] = await cx.execute('SELECT COUNT(*) AS count FROM permissoes;');
+        const count = Number(countRows[0].count);
         console.log(`Permissões existentes: ${count}`);
 
         // Se existirem, removê-las
         if(count > 0) {
-            const rows = await cx.execute('DELETE FROM permissoes;');
-            if(rows[0].affectedRows !== count) {
+            const [deleteResult] = await cx.execute('DELETE FROM permissoes;');
+            if(deleteResult.affectedRows !== count) {
                 throw new Error('Número de permissões removidas não corresponde ao esperado');
-            }            
+            }
             console.log('✔ Permissões existentes removidas');
-
-            // Zerar autoincremento da tabela permissoes
-            await cx.execute('ALTER TABLE permissoes AUTO_INCREMENT = 1;');
             console.log('✔ Auto-incremento da tabela permissoes reiniciado');
         }
-
-
-
 
         // Depois, insere as permissões definidas no código
         const values = permissions.map(perm => '(?, ?, ?, ?, ?, ?, ?)').join(', ');
@@ -49,16 +42,15 @@ async function syncPermissions() {
             throw new Error('Número de permissões inseridas não corresponde ao esperado');
         }
 
-        //Adiciona as permissões ao perfil ADMINISTRADOR
+        // Adiciona as permissões ao perfil ADMINISTRADOR
         const sqlPerfilPermissao = `INSERT IGNORE INTO perfis_permissoes (perfil_id, permissao_id) SELECT DISTINCT perfis.id, permissoes.id FROM perfis JOIN permissoes WHERE perfis.nome = 'ADMINISTRADOR' and permissoes.eh_publica = 0;`;
         const resultPerfilPermissao = await cx.execute(sqlPerfilPermissao);
 
         if(resultPerfilPermissao[0].affectedRows === 0) {
             throw new Error('Erro ao vincular permissões ao perfil ADMINISTRADOR');
         }
-  
-        console.log(`✔ Permissões vinculadas ao perfil ADMINISTRADOR: ${resultPerfilPermissao[0].affectedRows}`);
 
+        console.log(`✔ Permissões vinculadas ao perfil ADMINISTRADOR: ${resultPerfilPermissao[0].affectedRows}`);
 
         await cx.commit();
 

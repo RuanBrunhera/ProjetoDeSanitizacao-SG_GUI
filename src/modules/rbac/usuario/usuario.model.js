@@ -1,7 +1,6 @@
 import pool from '../../../core/database/data.js';
 import { AppError } from '../../../core/utils/AppError.js';
 
-
 export const cadastrar = async (usuario) => {
     try{
         const keys = Object.keys(usuario);
@@ -21,7 +20,6 @@ export const cadastrar = async (usuario) => {
             code: 500
         });
     }
-
 };
 
 export const alterar = async (id, usuario) => {
@@ -45,12 +43,11 @@ export const alterar = async (id, usuario) => {
             code: 500
         });
     }
-
 };
 
 export const consultarPorEmail = async (email) => {
     try {
-        const cmdSql = 'SELECT * FROM usuario WHERE email = ?;';
+        const cmdSql = 'SELECT id, nome, email, avatar, status, createdAt, updatedAt FROM usuario WHERE email = ?;';
         const [dados] = await pool.execute(cmdSql, [email]);
         return dados[0];
     }
@@ -61,12 +58,11 @@ export const consultarPorEmail = async (email) => {
             code: 500
         });
     }
-
 };
 
 export const consultar = async (filtro = '') => {
     try {
-        const cmdSql = 'SELECT id, nome, email,  avatar, status, createdAt, updatedAt FROM usuario WHERE nome LIKE ?;';
+        const cmdSql = 'SELECT id, nome, email, avatar, status, createdAt, updatedAt FROM usuario WHERE nome LIKE ?;';
         const [dados] = await pool.execute(cmdSql, [`%${filtro}%`]);
         return dados;
     }
@@ -77,12 +73,11 @@ export const consultar = async (filtro = '') => {
             code: 500
         });
     }
-
 };
 
 export const consultarPorId = async (id) => {
     try {
-        const cmdSql = 'SELECT * FROM usuario WHERE id = ?;';
+        const cmdSql = 'SELECT id, nome, email, avatar, status, createdAt, updatedAt FROM usuario WHERE id = ?;';
         const [dados] = await pool.execute(cmdSql, [id]);
         return dados[0];
     }
@@ -94,7 +89,6 @@ export const consultarPorId = async (id) => {
         });
     }
 };
-
 
 export const deletar = async (id) => {
     try {

@@ -14,7 +14,6 @@ export const cadastrar = async ({nome="",email="",senha="",avatar=""})=>{
     }
     const senhaHash = await bcrypt.hash(senha, 10);
     return await usuarioModel.cadastrar({nome,email,senha:senhaHash,avatar});
-
 };
 
 export const alterar = async (id=0, usuario={}) => {
@@ -36,14 +35,11 @@ export const alterar = async (id=0, usuario={}) => {
             code: 404
         });
     }
-    
-    result.senha = undefined; // Remover a senha do resultado
-    return result;
+    const { senha: _, ...usuarioSeguro } = result;
+    return usuarioSeguro;
 };
 
-
 export const login = async ({ email="", senha="" }) => {
-
     if (!email || !senha) {
         throw new AppError({
             message: "Email e senha são obrigatórios",
@@ -69,13 +65,14 @@ export const login = async ({ email="", senha="" }) => {
             code: 401
         });
     }
-    // //Efetuou login com sucesso, criar sessão
-     const horas_validade = 36;
-     const sessao = await sessoesService.criar({usuario: usuario.id, validade: horas_validade});
-     const token = helpers.buildToken(sessao) ;
-     const expiracao = sessao.validade;
-     return {token,expiracao,usuario};
 
+    const horas_validade = 36;
+    const sessao = await sessoesService.criar({usuario: usuario.id, validade: horas_validade});
+    const token = helpers.buildToken(sessao);
+    const expiracao = sessao.validade;
+    const { senha: _, ...usuarioSeguro } = usuario;
+
+    return {token, expiracao, usuario: usuarioSeguro};
 };
 
 export const consultarPorEmail = async (email) => {
@@ -87,8 +84,8 @@ export const consultarPorEmail = async (email) => {
             code: 404
         });
     }
-    data.senha = undefined; // Remover a senha do resultado
-    return data;
+    const { senha: _, ...seguro } = data;
+    return seguro;
 };
 
 export const consultar = async (query={}) => {
@@ -104,7 +101,6 @@ export const consultar = async (query={}) => {
     if(query.email){
         const usuario = await usuarioModel.consultarPorEmail(query.email);
         if(usuario){
-            usuario.senha = undefined; // Remover a senha do resultado
             data.push(usuario);
         }
     }
@@ -118,7 +114,6 @@ export const consultar = async (query={}) => {
     }
 
     return data;
-
 };
 
 export const consultarPorId = async (id) => {
@@ -130,8 +125,8 @@ export const consultarPorId = async (id) => {
             code: 404
         });
     }
-    data.senha = undefined; // Remover a senha do resultado
-    return data;
+    const { senha: _, ...seguro } = data;
+    return seguro;
 };
 
 export const deletar = async (id) => {
@@ -144,5 +139,4 @@ export const deletar = async (id) => {
         });
     }    
     return result;
-
 };

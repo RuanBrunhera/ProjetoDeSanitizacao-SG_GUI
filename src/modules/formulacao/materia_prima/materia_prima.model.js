@@ -2,9 +2,7 @@ import pool from '../../../core/database/data.js';
 import { AppError } from '../../../core/utils/AppError.js';
 
 export const consultar = async (filtro = '') => {
-    
     try {
-        
         const cmdSql = 'SELECT * FROM materia_prima WHERE nome LIKE ?;';
         const [dados] = await pool.execute(cmdSql, [`%${filtro}%`]);
         return dados;
@@ -15,15 +13,11 @@ export const consultar = async (filtro = '') => {
             reason: `Falha na execução do SELECT na tabela 'materia_prima'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
             code: 500
         });
-    } 
-
+    }
 };
 
-
 export const consultarPorId = async (id) => {
-    
     try {
-        
         const cmdSql = 'SELECT * FROM materia_prima WHERE id = ?;';
         const [dados] = await pool.execute(cmdSql, [id]);
         return dados[0];
@@ -34,14 +28,11 @@ export const consultarPorId = async (id) => {
             reason: `Falha na execução do SELECT na tabela 'materia_prima' filtrando por ID; verifique se o ID fornecido é válido. Detalhe: ${error.message}`,
             code: 500
         });
-    } 
-
+    }
 };
 
 export const consultarPorCodigo = async (codigo) => {
-    
     try {
-        
         const cmdSql = 'SELECT * FROM materia_prima WHERE codigo = ?;';
         const [dados] = await pool.execute(cmdSql, [codigo]);
         return dados;
@@ -52,14 +43,11 @@ export const consultarPorCodigo = async (codigo) => {
             reason: `Falha na execução do SELECT na tabela 'materia_prima' filtrando pelo código; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
             code: 500
         });
-    } 
-
+    }
 };
 
 export const consultarPorCas_number = async (cas_number) => {
-    
     try {
-        
         const cmdSql = 'SELECT * FROM materia_prima WHERE cas_number = ?;';
         const [dados] = await pool.execute(cmdSql, [cas_number]);
         return dados;
@@ -70,14 +58,11 @@ export const consultarPorCas_number = async (cas_number) => {
             reason: `Falha na execução do SELECT na tabela 'materia_prima' filtrando pelo CAS number; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
             code: 500
         });
-    } 
-
+    }
 };
 
 export const consultarPorFormula = async (formula) => {
-    
     try {
-        
         const cmdSql = 'SELECT * FROM materia_prima WHERE formula LIKE ?;';
         const [dados] = await pool.execute(cmdSql, [`%${formula}%`]);
         return dados;
@@ -88,22 +73,18 @@ export const consultarPorFormula = async (formula) => {
             reason: `Falha na execução do SELECT na tabela 'materia_prima' filtrando pela fórmula química; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
             code: 500
         });
-    } 
-
+    }
 };
 
-export const consultarMP_precentual_nutriente = async (nutrienteID=0,percentual=0.0) => {
-    
+export const consultarMP_precentual_nutriente = async (nutrienteID=0, percentual=0.0) => {
     try {
-        
-        // const cmdSql = 'CALL mp_precentual_nutriente(?,?);';
         const cmdSql = `
         SELECT
-            materia_prima.id 		as mp_id,
-            materia_prima.nome 		as mp_nome,
-            materia_prima.formula 	as mp_formula,
-            (${percentual} * 100) / garantia.percentual 	as percentual,
-            nutriente_percentualComposicao(materia_prima.id, ((${percentual} * 100) / garantia.percentual)) as composicao
+            materia_prima.id        as mp_id,
+            materia_prima.nome      as mp_nome,
+            materia_prima.formula   as mp_formula,
+            (? * 100) / garantia.percentual as percentual,
+            nutriente_percentualComposicao(materia_prima.id, ((? * 100) / garantia.percentual)) as composicao
         FROM
             nutriente
             JOIN
@@ -111,10 +92,10 @@ export const consultarMP_precentual_nutriente = async (nutrienteID=0,percentual=
             JOIN
             materia_prima ON garantia.materia_prima = materia_prima.id
         WHERE
-            nutriente.id = ${nutrienteID} AND ((${percentual} * 100) / garantia.percentual) < 100
+            nutriente.id = ? AND ((? * 100) / garantia.percentual) < 100
             ORDER BY percentual ASC
         `;
-        const [data] = await pool.execute(cmdSql);
+        const [data] = await pool.execute(cmdSql, [percentual, percentual, nutrienteID, percentual]);
         return data;
     } 
     catch (error) {
@@ -123,12 +104,10 @@ export const consultarMP_precentual_nutriente = async (nutrienteID=0,percentual=
             reason: `Falha na execução da consulta de matérias-primas por nutriente e percentual; verifique se os parâmetros fornecidos são válidos e a conectividade com o banco. Detalhe: ${error.message}`,
             code: 500
         });
-    } 
-
+    }
 };
 
 export const cadastrar = async (materia_prima) => {
-    
     try {        
         const campos = Object.keys(materia_prima);
         const values = Object.values(materia_prima);
@@ -137,9 +116,7 @@ export const cadastrar = async (materia_prima) => {
         const values_cmdSql = campos.map(() => '?').join(', ');
 
         const cmdSql = `INSERT INTO materia_prima (${params_cmdSql}) VALUES (${values_cmdSql})`;
-        
         const [result] = await pool.execute(cmdSql, values);
-
 
         return await consultarPorId(result.insertId);
     } 
@@ -149,46 +126,32 @@ export const cadastrar = async (materia_prima) => {
             reason: `Falha na execução do INSERT na tabela 'materia_prima'; verifique se há duplicidade de código ou CAS number, ou se os dados fornecidos são inválidos. Detalhe: ${error.message}`,
             code: 500
         });
-    } 
-
+    }
 };
 
 export const alterar = async (materia_prima) => {
-    
     try {
         const { id, ...dadosAtualizacao } = materia_prima;
         const campos = Object.keys(dadosAtualizacao);
         const valores = campos.map((campo) => dadosAtualizacao[campo]);
 
         const cmdSql = `UPDATE materia_prima SET ${campos.map((campo) => `${campo} = ?`).join(', ')} WHERE id = ?;`;
-
         valores.push(id);
 
         const [result] = await pool.execute(cmdSql, valores);
         if (result.affectedRows === 0) {
             return null;
-            // throw new AppError({
-            //     message: 'Matéria-prima não encontrada para atualização',
-            //     reason: `Nenhuma matéria-prima foi encontrada com o ID ${id} informado para atualização na base de dados.`,
-            //     code: 404
-            // });
         }
 
         return await consultarPorId(id);
-
     } 
     catch (error) {
-        // if (error instanceof AppError) {
-        //     throw error;
-        // }
-
         throw new AppError({
             message: 'Erro ao alterar matéria-prima',
             reason: `Falha na execução do UPDATE na tabela 'materia_prima'; verifique se o ID fornecido existe e se os dados são compatíveis com o esquema. Detalhe: ${error.message}`,
             code: 500
         });
-    } 
-
+    }
 };
 
 export const deletar = async (id) => {    
@@ -203,6 +166,5 @@ export const deletar = async (id) => {
             reason: `Falha na execução do DELETE na tabela 'materia_prima'; o registro pode não existir ou possuir garantias e etapas vinculadas que impedem a exclusão. Detalhe: ${error.message}`,
             code: 500
         });
-    } 
-
+    }
 };
