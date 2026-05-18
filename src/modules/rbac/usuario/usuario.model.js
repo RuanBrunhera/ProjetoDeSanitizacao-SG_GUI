@@ -47,7 +47,7 @@ export const alterar = async (id, usuario) => {
 
 export const consultarPorEmail = async (email) => {
     try {
-        const cmdSql = 'SELECT id, nome, email, avatar, status, createdAt, updatedAt FROM usuario WHERE email = ?;';
+        const cmdSql = 'SELECT id, nome, email, senha, avatar, status, createdAt, updatedAt FROM usuario WHERE email = ?;';
         const [dados] = await pool.execute(cmdSql, [email]);
         return dados[0];
     }

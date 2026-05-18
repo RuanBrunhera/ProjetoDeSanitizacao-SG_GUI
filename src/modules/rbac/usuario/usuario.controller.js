@@ -5,7 +5,10 @@ import { asyncHandler } from '../../../core/utils/asyncHandler.js';
 
 export const login = asyncHandler(async (req, res, next) => {
 
+    console.log(req.body);
+
     const result = await usuarioService.login(req.body);
+
 
     return responses.success(res, {  
         message: "Login realizado com sucesso", 
